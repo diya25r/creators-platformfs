@@ -6,6 +6,8 @@ const cors = require('cors');
 const connectDB = require('./config/database');
 const userRoutes = require('./routes/userRoutes');
 const authRoutes = require('./routes/authRoutes');
+const errorRoutes = require('./routes/errorRoutes');
+const errorHandler = require('./middleware/errorMiddleware');
 
 // Initialize Express app
 const app = express();
@@ -27,6 +29,9 @@ app.use('/api/auth', authRoutes);
 // Mount user routes at /api/users
 app.use('/api/users', userRoutes);
 
+// Mount error demo route
+app.use('/api/error', errorRoutes);
+
 // Health check route
 app.get('/api/health', (req, res) => {
   res.status(200).json({
@@ -35,6 +40,9 @@ app.get('/api/health', (req, res) => {
     timestamp: new Date().toISOString()
   });
 });
+
+// Global error handler must be added after all routes
+app.use(errorHandler);
 
 // Define the port from environment variables or default to 5000
 const PORT = process.env.PORT || 5000;

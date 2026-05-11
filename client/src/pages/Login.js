@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Navigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { useAuth } from '../context/AuthContext';
 import './Login.css';
 
@@ -9,7 +10,6 @@ const Login = () => {
     email: '',
     password: ''
   });
-  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
   if (isAuthenticated) {
@@ -25,10 +25,9 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
 
     if (!formData.email || !formData.password) {
-      setError('Please provide both email and password');
+      toast.error('Please provide both email and password');
       return;
     }
 
@@ -36,8 +35,9 @@ const Login = () => {
 
     try {
       await login(formData);
+      toast.success('Login successful! Redirecting to dashboard...');
     } catch (loginError) {
-      setError(loginError.message || 'Login failed');
+      toast.error(loginError.message || 'Login failed. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -47,7 +47,6 @@ const Login = () => {
     <div className="login">
       <div className="login-container">
         <h2>Login to Your Account</h2>
-        {error && <div className="error-message">{error}</div>}
         <form onSubmit={handleSubmit} className="login-form">
           <div className="form-group">
             <label htmlFor="email">Email</label>
