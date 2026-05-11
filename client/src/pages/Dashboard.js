@@ -1,26 +1,38 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import './Dashboard.css';
 
 const Dashboard = () => {
-  // Mock user data - in real app, this would come from API/context
-  const user = {
-    name: 'John Doe',
-    email: 'john@example.com',
-    projects: 5,
-    followers: 120
-  };
+  const { user, isAuthenticated, loading } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!loading && !isAuthenticated) {
+      navigate('/login');
+    }
+  }, [loading, isAuthenticated, navigate]);
+
+  if (loading) {
+    return <div className="dashboard">Loading...</div>;
+  }
+
+  if (!user) {
+    return null;
+  }
 
   return (
     <div className="dashboard">
       <div className="dashboard-container">
         <h2>Welcome back, {user.name}!</h2>
+        <p className="dashboard-email">{user.email}</p>
         <div className="dashboard-stats">
           <div className="stat-card">
-            <h3>{user.projects}</h3>
+            <h3>5</h3>
             <p>Projects</p>
           </div>
           <div className="stat-card">
-            <h3>{user.followers}</h3>
+            <h3>120</h3>
             <p>Followers</p>
           </div>
         </div>

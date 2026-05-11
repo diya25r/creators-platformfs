@@ -5,6 +5,7 @@ const express = require('express');
 const cors = require('cors');
 const connectDB = require('./config/database');
 const userRoutes = require('./routes/userRoutes');
+const authRoutes = require('./routes/authRoutes');
 
 // Initialize Express app
 const app = express();
@@ -20,6 +21,9 @@ app.use(cors());
 app.use(express.json());
 
 // Routes
+// Mount auth routes at /api/auth
+app.use('/api/auth', authRoutes);
+
 // Mount user routes at /api/users
 app.use('/api/users', userRoutes);
 
