@@ -6,6 +6,14 @@ A full-stack MERN (MongoDB, Express.js, React, Node.js) application for creators
 
 ```
 creators-platform/
+├── client/                 # React frontend application
+│   ├── public/             # Static assets
+│   ├── src/
+│   │   ├── components/     # Reusable components (Header, Footer)
+│   │   ├── pages/          # Page components (Home, Login, Register, Dashboard, NotFound)
+│   │   ├── App.js          # Main app component with routing
+│   │   └── App.css         # Global styles
+│   └── package.json        # Frontend dependencies
 ├── server/                 # Backend Node.js/Express API
 │   ├── config/
 │   │   └── database.js     # MongoDB connection configuration
@@ -19,7 +27,6 @@ creators-platform/
 │   ├── .gitignore          # Git ignore rules
 │   ├── package.json        # Dependencies and scripts
 │   └── server.js           # Main server file
-├── creators platform       # Frontend placeholder (to be implemented)
 └── README.md               # This file
 ```
 
@@ -69,27 +76,40 @@ Complete CRUD operations for users with authentication-ready structure:
 - npm or yarn
 
 ### Installation
-
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/diya25r/creators-platformfs.git
-   cd creators-platformfs
-   ```
-
-2. **Install backend dependencies**
+Backend Setup**
    ```bash
    cd server
    npm install
    ```
-
-3. **Environment Setup**
    Create `.env` file in server directory:
    ```
    PORT=5000
    MONGODB_URI=mongodb://localhost:27017/creators-platform
    ```
 
+3. **Frontend Setup**
+   ```bash
+   cd ../client
+   npm install
+   ```
+
 4. **Start MongoDB**
+   Make sure MongoDB is running on your system.
+
+5. **Start the applications**
+   ```bash
+   # Terminal 1 - Backend
+   cd server
+   npm start
+
+   # Terminal 2 - Frontend
+   cd client
+   npm start
+   ```
+
+6. **Access the application**
+   - Frontend: http://localhost:3000
+   - Backend API:
    Make sure MongoDB is running on your system.
 
 5. **Start the server**
@@ -125,10 +145,41 @@ curl -X POST http://localhost:5000/api/users/register \
     "id": "60d5ecb74b24c72b8c8b4567",
     "name": "John Doe",
     "email": "john@example.com",
-    "createdAt": "2023-06-25T10:30:00.000Z"
-  }
-}
-```
+   Frontend Features
+
+### Components
+- **Header**: Navigation bar with links to all pages
+- **Footer**: Footer with navigation links
+- **Home**: Landing page with hero section and features
+- **Login**: User login form
+- **Register**: User registration form
+- **Dashboard**: User dashboard with stats and activity
+- **NotFound (404)**: Error page for invalid routes
+
+### Routing
+- Client-side routing using React Router
+- Protected routes structure ready for authentication
+- 404 handling for unknown routes
+
+### Styling
+- Responsive CSS with mobile-first approach
+- Modern design with gradients and shadows
+- Form styling and interactive elements
+
+## API Integration
+
+The frontend is ready to integrate with the backend API:
+
+- **Registration**: POST `/api/users/register`
+- **Login**: (To be implemented with JWT)
+- **Get Users**: GET `/api/users`
+- **User Dashboard**: (To be implemented)
+
+## Development
+
+- **Backend**: `cd server && npm run dev` (with nodemon)
+- **Frontend**: `cd client && npm start`
+- **Production builds**: `npm run build` in respective directories
 
 ### Error Response
 ```json
