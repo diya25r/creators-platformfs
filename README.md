@@ -76,15 +76,18 @@ Complete CRUD operations for users with authentication-ready structure:
 - npm or yarn
 
 ### Installation
-Backend Setup**
+
+1. **Backend Setup**
    ```bash
    cd server
    npm install
    ```
-   Create `.env` file in server directory:
-   ```
+
+2. **Create backend `.env` file**
+   ```env
    PORT=5000
    MONGODB_URI=mongodb://localhost:27017/creators-platform
+   JWT_SECRET=your_jwt_secret_here
    ```
 
 3. **Frontend Setup**
@@ -94,9 +97,9 @@ Backend Setup**
    ```
 
 4. **Start MongoDB**
-   Make sure MongoDB is running on your system.
+   Make sure MongoDB is running locally or update the `MONGODB_URI` to use a cloud-hosted database.
 
-5. **Start the applications**
+5. **Run the applications**
    ```bash
    # Terminal 1 - Backend
    cd server
@@ -109,18 +112,11 @@ Backend Setup**
 
 6. **Access the application**
    - Frontend: http://localhost:3000
-   - Backend API:
-   Make sure MongoDB is running on your system.
-
-5. **Start the server**
-   ```bash
-   npm start
-   ```
-   Server will run on http://localhost:5000
+   - Backend: http://localhost:5000
 
 ### Testing the API
 
-Use tools like Postman or curl to test endpoints:
+Use Postman, Insomnia, or curl to test endpoints.
 
 **Health Check:**
 ```bash
@@ -144,27 +140,18 @@ curl -X POST http://localhost:5000/api/users/register \
   "data": {
     "id": "60d5ecb74b24c72b8c8b4567",
     "name": "John Doe",
-    "email": "john@example.com",
-   Frontend Features
+    "email": "john@example.com"
+  }
+}
+```
 
-### Components
-- **Header**: Navigation bar with links to all pages
-- **Footer**: Footer with navigation links
-- **Home**: Landing page with hero section and features
-- **Login**: User login form
-- **Register**: User registration form
-- **Dashboard**: User dashboard with stats and activity
-- **NotFound (404)**: Error page for invalid routes
-
-### Routing
-- Client-side routing using React Router
-- Protected routes structure ready for authentication
-- 404 handling for unknown routes
-
-### Styling
-- Responsive CSS with mobile-first approach
-- Modern design with gradients and shadows
-- Form styling and interactive elements
+### Error Response
+```json
+{
+  "success": false,
+  "message": "User with this email already exists"
+}
+```
 
 ## API Integration
 
@@ -179,20 +166,7 @@ The frontend is ready to integrate with the backend API:
 
 - **Backend**: `cd server && npm run dev` (with nodemon)
 - **Frontend**: `cd client && npm start`
-- **Production builds**: `npm run build` in respective directories
-
-### Error Response
-```json
-{
-  "success": false,
-  "message": "User with this email already exists"
-}
-```
-
-## Development
-
-- **Development mode:** `npm run dev` (with nodemon)
-- **Production mode:** `npm start`
+- **Production builds**: `cd server && npm run build` and `cd client && npm run build`
 
 ## Technologies Used
 
