@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useAuth } from '../context/AuthContext';
-import './Login.css';
 
 const Login = () => {
   const { login, isAuthenticated } = useAuth();
