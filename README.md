@@ -194,4 +194,4 @@ The frontend is ready to integrate with the backend API:
 
 ## License
 
-ISC License
+ISC Lisence
