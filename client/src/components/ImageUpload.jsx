@@ -55,9 +55,7 @@ const ImageUpload = ({ onUpload }) => {
     };
   }, [previewUrl]);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
+  const handleUploadClick = () => {
     if (!selectedFile || error) return;
 
     const formData = new FormData();
@@ -67,7 +65,7 @@ const ImageUpload = ({ onUpload }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="p-4 border rounded">
+    <div className="p-4 border rounded">
       <label htmlFor="image-upload">Select image</label>
       <input id="image-upload" type="file" accept="image/*" onChange={handleFileChange} />
 
@@ -93,13 +91,14 @@ const ImageUpload = ({ onUpload }) => {
       )}
 
       <button
-        type="submit"
+        type="button"
+        onClick={handleUploadClick}
         disabled={!selectedFile || !!error}
         style={{ marginTop: "10px" }}
       >
         Upload
       </button>
-    </form>
+    </div>
   );
 };
 
