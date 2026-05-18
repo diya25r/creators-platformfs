@@ -1,53 +1,59 @@
-// Load environment variables from .env file
-require('dotenv').config();
+import express from "express";
+import http from "http";
+import { Server } from "socket.io";
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+import postRoutes from "./routes/posts.js";
 
-const express = require('express');
-const cors = require('cors');
-const connectDB = require('./config/database');
-const userRoutes = require('./routes/userRoutes');
-const authRoutes = require('./routes/authRoutes');
-const errorRoutes = require('./routes/errorRoutes');
-const errorHandler = require('./middleware/errorMiddleware');
+dotenv.config();
 
-// Initialize Express app
 const app = express();
-
-// Connect to MongoDB
-connectDB();
-
-// Middleware
-// Enable CORS for all routes
-app.use(cors());
-
-// Parse JSON bodies
 app.use(express.json());
 
-// Routes
-// Mount auth routes at /api/auth
-app.use('/api/auth', authRoutes);
+const server = http.createServer(app);
 
-// Mount user routes at /api/users
-app.use('/api/users', userRoutes);
+const io = new Server(server, {
+  cors: {
+    origin: "http://localhost:5173",
+    credentials: true,
+  },
+});
 
-// Mount error demo route
-app.use('/api/error', errorRoutes);
+// ✅ Socket Authentication Middleware
+io.use((socket, next) => {
+  try {
+    const token = socket.handshake.auth.token;
 
-// Health check route
-app.get('/api/health', (req, res) => {
-  res.status(200).json({
-    success: true,
-    message: 'Server is running and healthy',
-    timestamp: new Date().toISOString()
+    if (!token) {
+      return next(new Error("No token"));
+    }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    socket.data.user = decoded;
+
+    next();
+  } catch (error) {
+    next(new Error("Invalid token"));
+  }
+});
+
+// ✅ Connection handler
+io.on("connection", (socket) => {
+  console.log(
+    `User connected: ${socket.data.user.email}`
+  );
+
+  socket.on("disconnect", () => {
+    console.log("User disconnected");
   });
 });
 
-// Global error handler must be added after all routes
-app.use(errorHandler);
+// ✅ Pass io into routes
+app.use("/api/posts", postRoutes(io));
 
-// Define the port from environment variables or default to 5000
 const PORT = process.env.PORT || 5000;
 
-// Start the server
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });

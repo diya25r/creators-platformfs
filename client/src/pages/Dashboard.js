@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { toast } from "react-toastify";
 import socket from "../services/socket";
 
 export default function Dashboard() {
@@ -22,11 +23,17 @@ export default function Dashboard() {
       console.log("Connection error:", err.message);
     });
 
-    // cleanup on unmount (VERY IMPORTANT for PR marks)
+    // ✅ realtime notification listener
+    socket.on("newPost", (data) => {
+      toast.success(data.message);
+    });
+
+    // cleanup on unmount
     return () => {
       socket.off("connect");
       socket.off("disconnect");
       socket.off("connect_error");
+      socket.off("newPost");
 
       socket.disconnect();
     };
