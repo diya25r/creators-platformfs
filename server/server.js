@@ -1,41 +1,63 @@
-// Load environment variables from .env file
-require('dotenv').config();
+import dotenv from "dotenv";
+import express from "express";
+import uploadRoutes from "./routes/upload.js";
+import http from "http";
+import { Server } from "socket.io";
+import jwt from "jsonwebtoken";
 
-const express = require('express');
-const cors = require('cors');
-const connectDB = require('./config/database');
-const userRoutes = require('./routes/userRoutes');
+import postRoutes from "./routes/posts.js";
 
-// Initialize Express app
+dotenv.config();
+
 const app = express();
-
-// Connect to MongoDB
-connectDB();
-
-// Middleware
-// Enable CORS for all routes
-app.use(cors());
-
-// Parse JSON bodies
 app.use(express.json());
 
-// Routes
-// Mount user routes at /api/users
-app.use('/api/users', userRoutes);
+app.use("/api/upload", uploadRoutes);
 
-// Health check route
-app.get('/api/health', (req, res) => {
-  res.status(200).json({
-    success: true,
-    message: 'Server is running and healthy',
-    timestamp: new Date().toISOString()
+const server = http.createServer(app);
+
+const io = new Server(server, {
+  cors: {
+    origin: "http://localhost:5173",
+    credentials: true,
+  },
+});
+
+// ✅ Socket Authentication Middleware
+io.use((socket, next) => {
+  try {
+    const token = socket.handshake.auth.token;
+
+    if (!token) {
+      return next(new Error("No token"));
+    }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    socket.data.user = decoded;
+
+    next();
+  } catch (error) {
+    next(new Error("Invalid token"));
+  }
+});
+
+// ✅ Connection handler
+io.on("connection", (socket) => {
+  console.log(
+    `User connected: ${socket.data.user.email}`
+  );
+
+  socket.on("disconnect", () => {
+    console.log("User disconnected");
   });
 });
 
-// Define the port from environment variables or default to 5000
+// ✅ Pass io into routes
+app.use("/api/posts", postRoutes(io));
+
 const PORT = process.env.PORT || 5000;
 
-// Start the server
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
