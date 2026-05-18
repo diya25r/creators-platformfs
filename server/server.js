@@ -1,14 +1,18 @@
+import dotenv from "dotenv";
 import express from "express";
+import uploadRoutes from "./routes/upload.js";
 import http from "http";
 import { Server } from "socket.io";
 import jwt from "jsonwebtoken";
-import dotenv from "dotenv";
+
 import postRoutes from "./routes/posts.js";
 
 dotenv.config();
 
 const app = express();
 app.use(express.json());
+
+app.use("/api/upload", uploadRoutes);
 
 const server = http.createServer(app);
 
