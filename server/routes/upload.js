@@ -1,10 +1,10 @@
-const express = require("express");
-const streamifier = require("streamifier");
+import express from "express";
+import streamifier from "streamifier";
+import cloudinary from "cloudinary";
+import upload from "../middleware/upload.js";
 
 const router = express.Router();
 
-const cloudinary = require("../config/cloudinary");
-const upload = require("../middleware/upload");
 function uploadToCloudinary(buffer) {
   return new Promise((resolve, reject) => {
     const stream = cloudinary.uploader.upload_stream(
@@ -25,29 +25,28 @@ function uploadToCloudinary(buffer) {
 }
 
 router.post("/", upload.single("image"), async (req, res) => {
-    try {
-      if (!req.file) {
-        return res.status(400).json({
-          success: false,
-          message: "No file uploaded",
-        });
-      }
-
-      const result = await uploadToCloudinary(req.file.buffer);
-
-      res.status(200).json({
-        success: true,
-        url: result.secure_url,
-        publicId: result.public_id,
-      });
-    } catch (error) {
-      res.status(500).json({
+  try {
+    if (!req.file) {
+      return res.status(400).json({
         success: false,
-        message: error.message,
+        message: "No file uploaded",
       });
     }
+
+    const result = await uploadToCloudinary(req.file.buffer);
+
+    res.status(200).json({
+      success: true,
+      url: result.secure_url,
+      publicId: result.public_id,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
   }
-);
+});
 
 router.use((error, req, res, next) => {
   if (error instanceof Error) {
@@ -60,4 +59,4 @@ router.use((error, req, res, next) => {
   next();
 });
 
-module.exports = router;
+export default router;
