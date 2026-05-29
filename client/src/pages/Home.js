@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const Home = () => {
   return (
@@ -7,8 +8,8 @@ const Home = () => {
         <h1>Welcome to Creator Platform</h1>
         <p>Showcase your creativity and connect with your audience</p>
         <div className="hero-buttons">
-          <a href="/register" className="btn btn-primary">Get Started</a>
-          <a href="/login" className="btn btn-secondary">Login</a>
+          <Link to="/create" className="btn btn-primary">Create Post</Link>
+          <Link to="/register" className="btn btn-secondary">Get Started</Link>
         </div>
       </div>
       <div className="features">

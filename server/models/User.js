@@ -19,7 +19,8 @@ const userSchema = new mongoose.Schema({
         // Simple email regex validation
         return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(v);
       },
-      message: 'Please enter a valid email'
+      message: 'Please enter a valid email',
+      index:true
     }
   },
   // Password field: required, minimum 6 characters, not selected by default for security

@@ -22,6 +22,7 @@ const Header = () => {
           {isAuthenticated && (
             <>
               <Link to="/dashboard" className="nav-link">Dashboard</Link>
+              <Link to="/create" className="nav-link">Create</Link>
               <button className="nav-link logout-button" onClick={logout}>
                 Logout
               </button>
